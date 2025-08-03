@@ -1,0 +1,35 @@
+﻿<Window x:Class="Launchpad.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Launchpad"
+        mc:Ignorable="d"
+        Title="Thislefern Cockpit and Lanuchpad" Height="450" Width="650">
+    <Grid>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Width="100" Margin="5,5,5,5">
+                <Button Content="Button" Padding="5,5,5,5" Margin="5,5,5,5"/>
+                <Button Content="Button" Padding="5,5,5,5" Margin="5,5,5,5"/>
+            </StackPanel>
+            <StackPanel Width="500" Margin="5,5,5,5">
+                <Button Content="Create new Spring project"
+                        Padding="5,5,5,5"
+                        Margin="5,5,5,5"/>
+                <ListBox
+                    x:Name="lbFolders"
+                    Margin="5,5,5,5"
+                    ItemsSource="{Binding FolderList}"
+                    Height="300" BorderBrush="LightGray"
+                    BorderThickness="2"
+                    MouseDoubleClick="ListView_MouseDoubleClick"
+                    SelectionChanged="ListView_SelectionChange"/>
+                <TextBox
+                    x:Name="tbPath"
+                    Margin="5,5,5,5"
+                    Padding="5,5,5,5"
+                    IsReadOnly="True"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
