@@ -4,6 +4,151 @@
              xmlns:local="clr-namespace:Launchpad"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <!-- Brushes -->
+        <SolidColorBrush x:Key="AppBackground" Color="#FF502E2E"/>
+        <SolidColorBrush x:Key="ButtonBackground" Color="#6B5F4B"/>
+        <SolidColorBrush x:Key="ButtonHover" Color="#A67B5B"/>
+        <SolidColorBrush x:Key="TextColor" Color="#F1E0C5"/>
+        <SolidColorBrush x:Key="TextBoxBackground" Color="#FFAFA070"/>
+        <SolidColorBrush x:Key="ListItemHover" Color="#C49E65"/>
+
+        <!-- Font -->
+        <Style x:Key="RetroFont" TargetType="{x:Type Control}">
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+        </Style>
+
+        <!-- Window Background -->
+        <Style TargetType="Window">
+            <Setter Property="Background" Value="{StaticResource AppBackground}"/>
+        </Style>
+
+        <!-- Button -->
+        <Style TargetType="Button" BasedOn="{StaticResource RetroFont}">
+            <Setter Property="Background" Value="{StaticResource ButtonBackground}" />
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}" 
+                        CornerRadius="2">
+                            <Border Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <!-- Hover effect -->
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#EEC39A"/>
+                    <Setter Property="BorderBrush" Value="#B5744F"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#C98245"/>
+                    <Setter Property="BorderBrush" Value="#7B3F1E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- TextBox -->
+        <Style TargetType="TextBox" BasedOn="{StaticResource RetroFont}">
+            <Setter Property="Background" Value="{StaticResource TextBoxBackground}"/>
+            <Setter Property="BorderBrush" Value="#40372C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Padding" Value="5,10"/>
+        </Style>
+
+        <Style TargetType="ListBoxItem" BasedOn="{StaticResource RetroFont}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="BorderBrush" Value="#40372C"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="Bd"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                            <ContentPresenter
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Margin="5,2" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource ListItemHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource ButtonHover}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="Gray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- GroupBox -->
+        <Style TargetType="GroupBox" BasedOn="{StaticResource RetroFont}">
+            <Setter Property="BorderBrush" Value="{StaticResource TextColor}"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+
+        <!-- TreeView -->
+        <Style TargetType="TreeView" BasedOn="{StaticResource RetroFont}">
+            <Setter Property="Background" Value="{StaticResource TextColor}"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+
+        <!-- ListBox -->
+        <Style TargetType="ListBox" BasedOn="{StaticResource RetroFont}">
+            <Setter Property="Background" Value="{StaticResource TextBoxBackground}"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Background" Value="#EAD7C5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid x:Name="Bg" Background="{TemplateBinding Background}">
+                            <Track Name="PART_Track" IsDirectionReversed="true">
+                                <Track.Thumb>
+                                    <Thumb Background="#C98245" Height="30" Width="10" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Style="{x:Null}" Height="0"/>
+                                </Track.IncreaseRepeatButton>
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Style="{x:Null}" Height="0"/>
+                                </Track.DecreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Application.Resources>
 </Application>

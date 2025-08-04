@@ -1,22 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Launchpad.HelperMethods;
 
 namespace Launchpad
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public ObservableCollection<FolderInfo> FolderList { get; set; } = new();
@@ -28,7 +19,7 @@ namespace Launchpad
 
             string[] dirs = Directory.GetDirectories(@"C:\Users\omkar\code library\projects");
 
-            foreach(string dir in dirs)
+            foreach (string dir in dirs)
             {
                 FolderList.Add(new FolderInfo
                 {
@@ -38,53 +29,98 @@ namespace Launchpad
             }
         }
 
-        /*private void LoadFolders(string path)
-        {
-            if (!Directory.Exists(path))
-            {
-                MessageBox.Show("Directory does not exist.");
-                return;
-            }
-
-            try
-            {
-                string[] directories = Directory.GetDirectories(path);
-                FolderList.Clear();
-                foreach (var dir in directories)
-                {
-                    FolderList.Add(System.IO.Path.GetFileName(dir)); // Add full path if needed
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading folders: {ex.Message}");
-            }
-        }*/
-
         private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            string idea64 = @"C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2025.1.4.1\bin\idea64.exe";
-            string projectName, projectPath;
-
-            if(lbFolders.SelectedItem is FolderInfo folder)
+            if (lbFolders.SelectedItem is FolderInfo folder)
             {
-                projectName = folder.Name;
-                projectPath = folder.FullPath;
-                MessageBox.Show("Launching: " + projectName + "\nFrom: " + projectPath);
+                OpenIn.IntelliJ(folder);
+            }
+        }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (lbFolders.SelectedItem is FolderInfo folder)
+            {
+                OpenIn.IntelliJ(folder);
+            }
+        }
+
+        private void ListView_SelectionChange(object sender, SelectionChangedEventArgs e)
+        {
+            if (lbFolders.SelectedItem is FolderInfo folder)
+            {
+                tbPath.Text = folder.FullPath;
+                var root = BuildTree(folder.FullPath);
+                tvFolderTree.ItemsSource = new List<FileSystemItem> { root };
+            }
+            else
+            {
+                tvFolderTree.ItemsSource = null;
+            }
+        }
+
+        private FileSystemItem BuildTree(string folderPath)
+        {
+            var item = new FileSystemItem
+            {
+                Name = Path.GetFileName(folderPath),
+                FullPath = folderPath,
+                IsFolder = true
+            };
+
+            // Add subfolders
+            foreach (var dir in Directory.GetDirectories(folderPath))
+            {
+                item.Children.Add(BuildTree(dir));
+            }
+
+            // Add files
+            foreach (var file in Directory.GetFiles(folderPath))
+            {
+                item.Children.Add(new FileSystemItem
+                {
+                    Name = Path.GetFileName(file),
+                    FullPath = file,
+                    IsFolder = false
+                });
+            }
+
+            return item;
+        }
+
+
+        private void OpenIn_explorer(object sender, RoutedEventArgs e)
+        {
+            if (lbFolders.SelectedItem is FolderInfo folder && Directory.Exists(folder.FullPath))
+                Process.Start("explorer.exe", $"\"{folder.FullPath}\"");
+        }
+
+        private void OpenIn_cmd(object sender, RoutedEventArgs e)
+        {
+            if (lbFolders.SelectedItem is FolderInfo folder)
+            {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = idea64,
-                    Arguments = $"\"{projectPath}\"",
+                    FileName = "cmd.exe",
+                    Arguments = $"/K cd /d \"{folder.FullPath}\"",
                     UseShellExecute = true
                 });
             }
         }
-        private void ListView_SelectionChange(object sender, SelectionChangedEventArgs e)
+
+        private void Button_NotepadPlusPlus(object sender, RoutedEventArgs e)
         {
-            if(lbFolders.SelectedItem is FolderInfo folder)
+            if (lbFolders.SelectedItem is FolderInfo folder)
             {
-                tbPath.Text = folder.FullPath;
+                OpenIn.NotepadPlusPlus(folder);
+            }
+        }
+
+        private void Btn_CopyPath(object sender, RoutedEventArgs e)
+        {
+            if (lbFolders.SelectedItem is FolderInfo folder)
+            {
+                Clipboard.SetText(folder.FullPath);
             }
         }
     }

@@ -5,31 +5,94 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Launchpad"
         mc:Ignorable="d"
-        Title="Thislefern Cockpit and Lanuchpad" Height="450" Width="650">
+        Title="Thistlefern Cockpit and Lanuchpad" Height="540" Width="960"
+        Style="{StaticResource {x:Type Window}}"
+    >
     <Grid>
-        <StackPanel Orientation="Horizontal">
-            <StackPanel Width="100" Margin="5,5,5,5">
-                <Button Content="Button" Padding="5,5,5,5" Margin="5,5,5,5"/>
-                <Button Content="Button" Padding="5,5,5,5" Margin="5,5,5,5"/>
-            </StackPanel>
-            <StackPanel Width="500" Margin="5,5,5,5">
-                <Button Content="Create new Spring project"
-                        Padding="5,5,5,5"
-                        Margin="5,5,5,5"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Grid.Column="0" Header="Projects" Margin="10,10,2,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Button Grid.Row="0" Content="Create new Spring project (under development)"/>
                 <ListBox
                     x:Name="lbFolders"
-                    Margin="5,5,5,5"
+                    Grid.Row="1"
                     ItemsSource="{Binding FolderList}"
-                    Height="300" BorderBrush="LightGray"
-                    BorderThickness="2"
                     MouseDoubleClick="ListView_MouseDoubleClick"
-                    SelectionChanged="ListView_SelectionChange"/>
-                <TextBox
-                    x:Name="tbPath"
-                    Margin="5,5,5,5"
-                    Padding="5,5,5,5"
-                    IsReadOnly="True"/>
-            </StackPanel>
-        </StackPanel>
+                    SelectionChanged="ListView_SelectionChange">
+                </ListBox>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Padding="5" Grid.Column="1" Header="Project Actions" Margin="2,10,10,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <GroupBox Grid.Column="0" Header="Explore">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBox 
+                        x:Name="tbPath" 
+                        IsReadOnly="True"
+                        Grid.Row="0"
+                        />
+                        <TreeView
+                        x:Name="tvFolderTree" 
+                        Grid.Row="1"
+                        RenderTransformOrigin="0.5,0.5">
+                            <TreeView.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform AngleY="-0.255"/>
+                                    <RotateTransform/>
+                                    <TranslateTransform Y="-0.396"/>
+                                </TransformGroup>
+                            </TreeView.RenderTransform>
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                    <TextBlock Text="{Binding Name}" />
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                            <TreeView.ItemContainerStyle>
+                                <Style TargetType="TreeViewItem">
+                                    <Setter Property="IsExpanded" Value="False" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=Parent}" Value="{x:Null}">
+                                            <Setter Property="IsExpanded" Value="True" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TreeView.ItemContainerStyle>
+                        </TreeView>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="Actions" Grid.Column="1">
+                    <StackPanel>
+                        <Button Content="Copy path" Click="Btn_CopyPath"/>
+                        <Button Content="Explore Project" Click="OpenIn_explorer"/>
+                        <Button Content="Command Project" Click="OpenIn_cmd"/>
+                        <Button Content="Open in IntelliJ" Click="Button_Click"/>
+                        <Button Content="Open in Notepad++ (Unsupported)" Click="Button_NotepadPlusPlus"/>
+                        <Button Content="Open in VS Code (under development)"/>
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>
